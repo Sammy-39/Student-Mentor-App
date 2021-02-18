@@ -76,6 +76,7 @@ const Mentor = ({mentorData,getMentorsData,getStudentsData,studSelectList, setSt
                                 onChange={(list)=>handleStudsSelect(list,idx)}
                                 hasSelectAll = {false}
                                 disableSearch = {true}
+                                overrideStrings = {{"selectSomeItems": "Assign Students"}}
                             />
                             </td>
                         </tr>
