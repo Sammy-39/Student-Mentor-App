@@ -19,15 +19,17 @@ const Student = ({studentData,mentorData,getStudentsData,getMentorsData}) =>{
 
     const addStudent = async (e) =>{
         e.preventDefault();
-        var res = await fetch(`https://student-mentor-app.herokuapp.com/api/student`,{
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name})
-        })
-        var resData = await res.json()
-        if(resData.message = "Added 1 entry"){
-            getStudentsData()
-            setName("")
+        if(name!==""){
+            var res = await fetch(`https://student-mentor-app.herokuapp.com/api/student`,{
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({name})
+            })
+            var resData = await res.json()
+            if(resData.message = "Added 1 entry"){
+                getStudentsData()
+                setName("")
+            }
         }
     }
 

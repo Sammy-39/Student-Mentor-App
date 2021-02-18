@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react'
+import MultiSelect from "react-multi-select-component";
 
-const Mentor = ({mentorData,getMentorsData,getStudentsData}) =>{
+const Mentor = ({mentorData,getMentorsData,getStudentsData,studSelectList, setStudSelectList}) =>{
     const [name,setName] = useState("")
+
+    const [select,setSelect] = useState([])
 
     useEffect(()=>{
         getMentorsData()
@@ -9,16 +12,34 @@ const Mentor = ({mentorData,getMentorsData,getStudentsData}) =>{
 
     const addMentor = async (e) =>{
         e.preventDefault();
-        var res = await fetch(`https://student-mentor-app.herokuapp.com/api/mentor`,{
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name})
-        })
-        var resData = await res.json()
-        if(resData.message = "Added 1 entry"){
-            getMentorsData()
-            getStudentsData()
-            setName("")
+            if(name!==""){
+                var res = await fetch(`https://student-mentor-app.herokuapp.com/api/mentor`,{
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({name})
+                })
+                var resData = await res.json()
+                if(resData.message = "Added 1 entry"){
+                    getMentorsData()
+                    getStudentsData()
+                    setName("")
+                }
+            }
+        }
+
+    const handleStudsSelect = async (list,idx) =>{
+        if(list.length!==0){
+            let studList = list.map((item)=>item.value)
+            var res = await fetch(`https://student-mentor-app.herokuapp.com/api/mentor/${idx+1}`,{
+                method: "PATCH",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"studsId":studList})
+            })
+            var resData = await res.json()
+            if(resData.message = "Patch Success"){
+                getMentorsData()
+                getStudentsData()
+            }  
         }
     }
 
@@ -38,6 +59,7 @@ const Mentor = ({mentorData,getMentorsData,getStudentsData}) =>{
                     <th scope="col">Name</th>
                     <th scope="col">Mentor ID</th>
                     <th scope="col">Students ID</th>
+                    <th scope="col">Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,6 +70,14 @@ const Mentor = ({mentorData,getMentorsData,getStudentsData}) =>{
                             <td> {mentor.name} </td>
                             <td> {mentor.id} </td>
                             <td> {(mentor.studsId && mentor.studsId.join(", ")) || '-'}  </td>
+                            <td className="options"> 
+                            <MultiSelect
+                                options={studSelectList}
+                                onChange={(list)=>handleStudsSelect(list,idx)}
+                                hasSelectAll = {false}
+                                disableSearch = {true}
+                            />
+                            </td>
                         </tr>
                     ))
                 }

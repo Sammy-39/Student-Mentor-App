@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 
 import Mentor from './mentor';
 import Student from './student';
@@ -9,6 +9,8 @@ function App() {
   const [studentData, setStudentData] = useState([])
 
   const [mentorData, setMentorData] = useState([])
+
+  const [studSelectList,setStudSelectList] = useState([])
 
   const getStudentsData = async () =>{
         var res = await fetch(`https://student-mentor-app.herokuapp.com/api/students`)
@@ -21,12 +23,22 @@ function App() {
       var resData = await res.json()
       setMentorData(resData)
   }
+
+  useEffect(()=>{
+    if(studentData.length!==0){
+      let studsWithNoMentor = studentData.filter((stud)=>("mentorId" in stud === false)).map((stud)=>({label:stud.id, value:stud.id}))
+      setStudSelectList(studsWithNoMentor)
+    }
+    
+  },[mentorData,studentData])
+
   return (
     <>
     <Navbar />
     <div className="app">
       <Student studentData={studentData} mentorData={mentorData} getStudentsData={getStudentsData} getMentorsData={getMentorsData}  />
-      <Mentor mentorData={mentorData} getMentorsData={getMentorsData} getStudentsData={getStudentsData}/>
+      <Mentor mentorData={mentorData} getMentorsData={getMentorsData} 
+      getStudentsData={getStudentsData} studSelectList={studSelectList} setStudSelectList={setStudSelectList}/>
     </div>
     </>
   );
