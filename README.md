@@ -1,4 +1,10 @@
-# Getting Started with Create React App
+# Student-Mentor App
+
+Assigns students to mentor and mentor to students. 
+
+Backend repo: https://github.com/Sammy-39/Student-Mentor-API
+
+Backend hosted at: https://student-mentor-app.herokuapp.com/
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
