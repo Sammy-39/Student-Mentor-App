@@ -1,24 +1,34 @@
-import logo from './logo.svg';
+import {useState} from 'react'
+
+import Mentor from './mentor';
+import Student from './student';
 import './App.css';
+import Navbar from './navbar';
 
 function App() {
+  const [studentData, setStudentData] = useState([])
+
+  const [mentorData, setMentorData] = useState([])
+
+  const getStudentsData = async () =>{
+        var res = await fetch(`https://student-mentor-app.herokuapp.com/api/students`)
+        var resData = await res.json()
+        setStudentData(resData)
+  }
+
+  const getMentorsData = async () =>{
+      var res = await fetch(`https://student-mentor-app.herokuapp.com/api/mentors`)
+      var resData = await res.json()
+      setMentorData(resData)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+    <Navbar />
+    <div className="app">
+      <Student studentData={studentData} mentorData={mentorData} getStudentsData={getStudentsData} getMentorsData={getMentorsData}  />
+      <Mentor mentorData={mentorData} getMentorsData={getMentorsData} getStudentsData={getStudentsData}/>
     </div>
+    </>
   );
 }
 
